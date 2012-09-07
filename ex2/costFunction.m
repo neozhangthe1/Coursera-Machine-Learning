@@ -18,14 +18,25 @@ grad = zeros(size(theta));
 %               derivatives of the cost w.r.t. each parameter in theta
 %
 % Note: grad should have the same dimensions as theta
-%
 
+%	For ex2data1.txt...
+%   m = 100
+%   n = 3
 
+%	theta = [n 1]
+%	X = [m n]
+%   y = [m 1]
 
+% get the hypothesis for all of X, given theta;
+h = sigmoid(X * theta);
+% h = [n x 1]
 
+costPos = -y' * log(h);
+costNeg = (1 - y') * log(1 - h);
 
+J = (1/m) * (costPos - costNeg);
 
-
+grad = (1/m) * (X' * (h - y));
 
 % =============================================================
 
