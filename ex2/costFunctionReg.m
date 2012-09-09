@@ -17,31 +17,18 @@ grad = zeros(size(theta));
 %               Compute the partial derivatives and set grad to the partial
 %               derivatives of the cost w.r.t. each parameter in theta
 
-% non-regularized bits first
-h = sigmoid(X * theta);
-costPos = -y' * log(h);
-costNeg = (1 - y') * log(1 - h);
-% nonreg is equal to the non-regularized J in costFunction.m
-nonreg = (1/m) * (costPos - costNeg);
+% costFunctionReg is the costFunction plus the regularization bits.
+% reusing costFunction to keep it DRY
+[J, grad] = costFunction(theta, X, y);
 
-% pop off the theta(1) param
-regTheta = theta(2:end, :);
-% calculate the regularization bit
-reg = (lambda / (2*m)) * (regTheta' * regTheta);
+% Deal with the theta(1) term
+thetaFiltered = [0; theta(2:end)];
 
-% J is the the non-regularized cost plus the regularized parameters
-J = nonreg + reg;
+% J is the the non-regularized cost plus regularization
+J = J + ((lambda / (2*m)) * (thetaFiltered' * thetaFiltered));
 
-% g0 is equal to the non-regularized grad in costFunction.m
-g0 = (1/m) * (X' * (h - y));
-% get regularized bits
-gTheta = (lambda / m) * theta;
-
-% zero out the theta(1) term
-gTheta(1) = 0;
-
-grad = g0 + gTheta;
+% grad is the non-regularized cost plus regularization.
+grad = grad + ((lambda / m) * thetaFiltered);
 
 % =============================================================
-
 end
